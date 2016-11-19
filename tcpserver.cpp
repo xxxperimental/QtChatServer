@@ -19,17 +19,18 @@ void TcpServer::newUser()
 {
     if(isListen){
         std::shared_ptr<QTcpSocket> client(pTcpServer->nextPendingConnection());
-        connect(client.get(), SIGNAL(readyRead()), this, SLOT(readDataFromClient()));
+
+        connect(client.get(), SIGNAL(readyRead()), this, SLOT(newUser()));
         users.push_back(client);
     }
 }
 
 void TcpServer::readDataFromClient()
 {
-    std::unique_ptr<QTcpSocket> client((std::unique_ptr<QTcpSocket>) sender());
-    std::string data = client->readAll();
+    std::unique_ptr<QTcpSocket> client(dynamic_cast<QTcpSocket*>(sender()));
+    QString data(client->readAll());
 
     for(auto client : users){
-        client->write(data.c_str());
+        client->write(data.toUtf8());
     }
 }
