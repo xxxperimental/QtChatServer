@@ -5,6 +5,11 @@ TcpServer::TcpServer(QObject *parent) : QObject(parent)
 
 }
 
+TcpServer::~TcpServer()
+{
+    this->close();
+}
+
 void TcpServer::open(const QHostAddress &addr, const quint16 port)
 {
     pTcpServer = std::unique_ptr<QTcpServer>(new QTcpServer(this));
