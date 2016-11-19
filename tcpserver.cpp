@@ -2,16 +2,32 @@
 
 TcpServer::TcpServer(QObject *parent) : QObject(parent)
 {
+
+}
+
+void TcpServer::open(const QHostAddress &addr, const quint16 port)
+{
     pTcpServer = std::unique_ptr<QTcpServer>(new QTcpServer(this));
 
     connect(pTcpServer.get(), SIGNAL(newConnection()), this, SLOT(newUser()));
 
-    if(!pTcpServer->listen(QHostAddress::Any, 4444)){
+    if(!pTcpServer->listen(addr, port)){
         std::cout << "Unable to start the server: " << pTcpServer->errorString().constData() << std::endl;
         isListen = false;
     }
     else{
         isListen = true;
+    }
+}
+
+void TcpServer::close()
+{
+    if(isListen){
+        for(auto client : users){
+            client->write("bye :'(");
+            client->close();
+        }
+
     }
 }
 
