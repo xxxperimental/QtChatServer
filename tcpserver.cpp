@@ -16,6 +16,7 @@ void TcpServer::open(const QHostAddress &addr, const quint16 port)
         isListen = false;
     }
     else{
+        std::cout << "Server start on: " << addr.toString().toStdString() << ":" << port << std::endl;
         isListen = true;
     }
 }
