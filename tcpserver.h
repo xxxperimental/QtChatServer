@@ -13,11 +13,12 @@ private:
     std::unique_ptr<QTcpServer> pTcpServer;
     bool isListen;
     std::vector<std::shared_ptr<QTcpSocket>> users;
+    void close();
 
 public:
     explicit TcpServer(QObject *parent = 0);
+    ~TcpServer();
     void open(const QHostAddress& addr, const quint16 port);
-    void close();
 
 signals:
 
