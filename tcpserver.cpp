@@ -36,8 +36,8 @@ void TcpServer::newUser()
 {
     if(isListen){
         std::shared_ptr<QTcpSocket> client(pTcpServer->nextPendingConnection());
-
-        connect(client.get(), SIGNAL(readyRead()), this, SLOT(newUser()));
+        QTextStream(stdout) << "New user connected" << endl;
+        connect(client.get(), SIGNAL(readyRead()), this, SLOT(readDataFromClient()));
         users.push_back(client);
     }
 }
@@ -47,7 +47,11 @@ void TcpServer::readDataFromClient()
     std::unique_ptr<QTcpSocket> client(dynamic_cast<QTcpSocket*>(sender()));
     QString data(client->readAll());
 
+    QTextStream(stdout) << "<- : " << data << endl;
+
     for(auto client : users){
         client->write(data.toUtf8());
+        client->waitForBytesWritten();
+       QTextStream(stdout) << "-> : " << data << endl;
     }
 }
