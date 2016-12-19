@@ -52,11 +52,10 @@ void TcpServer::readDataFromClient()
     std::unique_ptr<QTcpSocket> client(dynamic_cast<QTcpSocket*>(sender()));
     QString data(client->readAll());
 
-    QTextStream(stdout) << "<- : " << data << endl;
+    QTextStream(stdout) << data << endl;
 
-    for(auto client : users){
-        client->write(data.toUtf8());
-        client->waitForBytesWritten();
-       QTextStream(stdout) << "-> : " << data << endl;
+    for(const auto &sender : users){
+        sender->write(data.toUtf8());
+        sender->waitForBytesWritten();
     }
 }
